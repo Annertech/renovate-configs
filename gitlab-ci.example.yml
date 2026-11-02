@@ -1,0 +1,39 @@
+include:
+  - remote: https://gitlab.com/renovate-bot/renovate-runner/-/raw/v26.0.1/templates/renovate.gitlab-ci.yml
+
+variables:
+  CI_RENOVATE_IMAGE: ghcr.io/renovatebot/renovate:full
+
+renovate:
+  variables:
+    # Scan every repo the token can see rather than an explicit repository list.
+    RENOVATE_AUTODISCOVER: 'true'
+
+    # Don't open "Configure Renovate" onboarding MRs. Repos are expected to
+    # already contain a renovate.json; those without one are skipped.
+    RENOVATE_ONBOARDING: 'false'
+
+    # Narrows autodiscovery to the client groups listed below; a repo is scanned
+    # if it matches any one of them. Renovate parses this variable as a JSON
+    # array (the same mechanism RENOVATE_ALLOWED_COMMANDS relies on), so the
+    # value can be folded over several lines for readability.
+    #
+    # Optional:
+    # To onboard a client, add one line. Keep "test" first, then alphabetical,
+    # and mind that JSON forbids a trailing comma on the last entry.
+    #RENOVATE_AUTODISCOVER_FILTER: >-
+    #  [
+    #  "/^gitlab-group\/drupal-project$/i"
+    #  ]
+
+    RENOVATE_ALLOWED_COMMANDS: '["^composer install"]'
+
+    # Without this Renovate runs its internal `composer update --no-plugins`,
+    # so composer/installers never relocates drupal/core and it lands in
+    # vendor/drupal/core instead of web/core.
+    RENOVATE_ALLOW_PLUGINS: 'true'
+
+    # Force Composer to use --with-all-dependencies during updates
+    RENOVATE_POST_UPDATE_OPTIONS: '["composerWithAll"]'
+
+    LOG_LEVEL: "info"

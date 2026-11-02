@@ -1,0 +1,4 @@
+{
+    "extends": ["https://publicly/hosted/default.json"],
+    "assignees": ["MrSecure"]
+}

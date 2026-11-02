@@ -1,0 +1,80 @@
+{
+    "description": "Annertech shared Renovate preset for Drupal projects. Extend with local>anrt-tools/renovate",
+    "extends": ["config:recommended"],
+    "logLevelRemap": [
+      {
+        "matchMessage": "/requirements cannot be resolved/",
+        "newLogLevel": "info"
+      },
+      {
+        "matchMessage": "/Detected empty commit/",
+        "newLogLevel": "info"
+      }
+    ],
+    "automerge": false,
+    "fetchChangeLogs": "off",
+    "branchPrefix": "renovate/",
+    "labels": ["dependencies"],    "rangeStrategy": "update-lockfile",
+    "timezone": "Etc/UTC",
+    "enabledManagers": ["composer"],
+    "prHeader": "**Automated dependency update.** Please test on the dev site before merging and **check for configuration changes on production site.**",
+    "prConcurrentLimit": 3,
+    "prHourlyLimit": 2,
+    "major": { "enabled": false },
+    "ignorePaths": [
+        "**/node_modules/**",
+        "**/bower_components/**",
+        "**/vendor/**",
+        "vendor/**",
+        "**/drush/**",
+        "drush/**",
+        "**/examples/**",
+        "**/__tests__/**",
+        "**/test/**",
+        "**/tests/**",
+        "**/__fixtures__/**",
+        "web/core/**",
+        "web/modules/contrib/**",
+        "web/themes/contrib/**",
+        "web/profiles/contrib/**",
+        "web/libraries/**",
+        "docroot/core/**",
+        "docroot/modules/contrib/**",
+        "docroot/themes/contrib/**",
+        "docroot/profiles/contrib/**",
+        "docroot/libraries/**"
+    ],
+    "postUpgradeTasks": {
+        "commands": ["composer install --no-interaction --no-progress"],
+        "fileFilters": [
+            "composer.json",
+            "composer.lock",
+            "composer-manifest.yaml",
+            "vendor/**",
+            "web/core/**",
+            "web/modules/contrib/**",
+            "web/themes/contrib/**"
+        ],
+        "executionMode": "branch"
+    },
+    "packageRules": [
+        {
+            "matchPackagePatterns": [".*"],
+            "prBodyColumns": [
+                "Package",
+                "Update",
+                "Type",
+                "Change"
+            ]
+        },
+        {
+            "matchPackageNames": ["php"],
+            "enabled": false
+        },
+        {
+            "groupName": "Drupal dependencies",
+            "groupSlug": "drupal-deps",
+            "matchUpdateTypes": ["minor", "patch"]
+        }
+    ]
+}
